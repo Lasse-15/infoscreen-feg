@@ -315,13 +315,13 @@
                     // check file type
                     var imageType = /image.(jpeg|jpg|png)/;
                     if (!file.type.match(imageType)) {
-                        alert("File \"" + file.name + "\" is not a valid image file, only jpeg and png are supported");
+                        alert("Die Datei \"" + file.name + "\" ist keine zulässige Bilddatei! Nur jpeg und png werden unterstützt.");
                         return false;
                     }
 
                     // check file size
                     if (parseInt(file.size / 1024) > 2050) {
-                        alert("File \"" + file.name + "\" is too big. Max allowed size is 2 MB.");
+                        alert("Die Datei \"" + file.name + "\" ist zu groß. Die maximale Dateigröße beträgt 2 MB.");
                         return false;
                     }
 
@@ -410,7 +410,7 @@
             var busyTemplate = `
             <div class="card">
                 <div class="ui active dimmer">
-                    <div class="ui text loader">Uploading</div>
+                    <div class="ui text loader">Wird hochgeladen</div>
                 </div>
             </div>`;
 

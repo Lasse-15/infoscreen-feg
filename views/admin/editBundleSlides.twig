@@ -90,7 +90,7 @@
             return (value);
         }, {
             submit: 'rename',
-            tooltip: "Doubleclick to edit...",
+            tooltip: "Zum Bearbeiten doppelklicken...",
             event: "dblclick",
             cssclass: 'ui mini nopadded form',
             cancelcssclass: 'ui tiny basic negative button',
@@ -99,7 +99,7 @@
 
         function remove(uuid) {
             var obj = {uuid: uuid, bundleName: bundleName};
-            if (confirm("Really delete slide?")) {
+            if (confirm("Folie wirklich löschen?")) {
                 emit('admin.removeSlide', obj);
             }
         }

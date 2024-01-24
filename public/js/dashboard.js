@@ -136,7 +136,7 @@ socket.on("callback.dashboard.update", function (data) {
         return (value);
     }, {
         submit: 'rename',
-        tooltip: "Doubleclick to edit...",
+        tooltip: "Zum Bearbeiten doppelklicken...",
         event: "dblclick",
         cssclass: 'ui mini nopadded form',
         cancelcssclass: 'ui tiny basic negative button',
@@ -335,7 +335,7 @@ function updateSlides(slides) {
         if (slide.epochEnd != -1) {
             let d = new Date(slide.epochEnd);
             let isoStr = d.toLocaleDateString() + " " + d.toLocaleTimeString();
-            statusHtml += ` <i class="delete icon"></i> ${isoStr}`;
+            statusHtml += ` <br/><i class="delete icon"></i> ${isoStr}`;
         }
         
         let toggleButton = `<i class="large toggle ${status} icon" onclick="emit('controls.toggle', {fileName: '${slide.uuid}'} );"></i>`;
@@ -373,7 +373,7 @@ function updateSlides(slides) {
         return (value);
     }, {
         submit: 'rename',
-        tooltip: "Doubleclick to edit...",
+        tooltip: "Zum Bearbeiten doppelklicken...",
         event: "dblclick",
         cssclass: 'ui mini nopadded form',
         cancelcssclass: 'ui tiny basic negative button',
@@ -399,13 +399,13 @@ function changeBundle(name) {
 function remove(uuid) {
     let obj = { bundleName: serverOptions.currentBundle, uuid: uuid };
     
-    if (confirm("Really delete slide?")) {
+    if (confirm("Folie wirklich löschen?")) {
         emit('admin.removeSlide', obj);
     }
 }
 
 function forceReload() {
-    if (confirm("Really reload all connected display clients ?")) {
+    if (confirm("Sollen alle verbundenen Bildschirme gezwungen werden die Verbindung zu aktualisieren?")) {
         emit('admin.reload');
     }
 }

@@ -5,7 +5,7 @@ let slideData;
 const grid = 1920 / 32;
 
 let _clipboard = null;
-let slideName = "untitled";
+let slideName = "Unbenannt";
 let undoData = [];
 let undoActive = false;
 let templates = {};
@@ -758,13 +758,13 @@ function removeSelectedObjects() {
 
 function cueSlide(id) {
     if (id === null) {
-        var bool = confirm('You are about to display the current slide for ALL DISPLAYS, are you sure?')
+        var bool = confirm('Du bist dabei die aktuelle Folie auf allen verbundenen Bildschirmen anzuzeigen. Bitte bestätige, das du dies wirklich tun möchtest.')
         if (bool === false) {
             return;
         }
     }
 
-    if (confirm('Force display of the current slide?')) {
+    if (confirm('Anzeigen der aktuellen Folie erzwingen?')) {
         var duration = null;
         if ($.isNumeric($("#duration").val())) {
             duration = parseFloat($("#duration").val());
@@ -792,7 +792,7 @@ function cueSlide(id) {
 }
 
 function removeTemplate(value) {
-    if (confirm("Are you sure you wish to remove this template?")) {
+    if (confirm("Willst du diese Vorlage wwirklich löschen?")) {
         socket.emit("edit.removeTemplate", {
             name: value,
         });
@@ -960,7 +960,7 @@ function saveAsFullScreenImage(name = "untitled", imageData) {
 
 
 function deleteImage(name) {
-    if (confirm("Really delete image?")) {
+    if (confirm("Bild wirklich löschen?")) {
         socket.emit("edit.deleteImage", {
             bundleName: bundle,
             name: name,
