@@ -1,29 +1,35 @@
-import express from 'express';
+import express from "express";
 const router = express.Router();
-import config from '../config.js';
-import cli from '../modules/cli.js';
-import { RateLimiterMemory } from 'rate-limiter-flexible';
+import config from "../config.js";
+import cli from "../modules/cli.js";
+import { RateLimiterMemory } from "rate-limiter-flexible";
 
 const rateLimiter = new RateLimiterMemory({
     points: 500, // Number of points
     duration: 1, // Per second
-    blockDuration: 60 // one minute
+    blockDuration: 60, // one minute
 });
 
 const rateLimit = (req, res, next) => {
-    rateLimiter.consume(req.ip)
+    rateLimiter
+        .consume(req.ip)
         .then(() => {
             next();
         })
-        .catch(_ => {
+        .catch((_) => {
             console.log(`Blocked ${req.ip}, due too many requests`);
-            res.status(429).send('Too Many Requests');
+            res.status(429).send("Too Many Requests");
         });
 };
 
-function ensureIsAdmin(req, res, next) {
-    let test = req.url.match(/^\/(login|logout|empty)\//);
+function isAuthorized(req, res, next) {
+    // if no authorization for this page needed
+    let isUnauthorizedPage = req.url.match(/^\/(login|logout|empty)\//);
+    if (isUnauthorizedPage) {
+        return next();
+    }
 
+    // if has accessKey
     if (config.accesskey) {
         if (req.query.accesskey && req.query.accesskey == config.accesskey) {
             req.session.accesskey = config.accesskey;
@@ -34,83 +40,82 @@ function ensureIsAdmin(req, res, next) {
         }
     }
 
-    if (test) {
+    // if user is authenticated
+    if (req.isAuthenticated && req.isAuthenticated()) {
         return next();
-    } else {
-        if (!req.isAuthenticated || !req.isAuthenticated()) {
-            req.session.location = req.originalUrl;
-            return res.redirect("/login");
-        }
     }
-    return next();
+
+    // otherwise redirect to login page
+    req.session.location = req.originalUrl;
+    return res.redirect("/login");
 }
 const availableDisplays = config.displays;
 
 export default function (pluginManager, websocket, dispatcher) {
-    router.use(ensureIsAdmin);
+    router.use(isAuthorized);
     router.use(rateLimit);
 
-    router.get('/', function (req, res, next) {
-        res.render('index', {
-            config: config
+    router.get("/", function (req, res, next) {
+        res.render("index", {
+            config: config,
         });
     });
 
-    router.get('/favicon.ico', function (req, res, next) {
+    router.get("/favicon.ico", function (req, res, next) {
         res.send("public/favicon.ico");
     });
 
-    router.get('/display/:id/lite', function (req, res, next) {
+    router.get("/display/:id/lite", function (req, res, next) {
         let idx = parseInt(req.params.id);
-        let volume = req.query['videoVolume'] || 1.;
+        let volume = req.query["videoVolume"] || 1;
         let extra = pluginManager.getDisplayAdditions();
-        return res.render('liteDisplay', {
+        return res.render("liteDisplay", {
             config: config,
             display: availableDisplays[idx],
             displayId: idx,
             extra: extra,
-            videoVolume: volume
+            videoVolume: volume,
         });
     });
 
-    router.get('/display/:id/css', function (req, res, next) {
+    router.get("/display/:id/css", function (req, res, next) {
         let idx = parseInt(req.params.id);
-        let preview = parseInt(req.query['isPreview']) || 0;
-        let volume = parseFloat(req.query['videoVolume']) || 1.;
+        let preview = parseInt(req.query["isPreview"]) || 0;
+        let volume = parseFloat(req.query["videoVolume"]) || 1;
         let extra = pluginManager.getDisplayAdditions();
-        res.render('display', {
+        res.render("display", {
             config: config,
             display: availableDisplays[idx],
             displayId: idx,
             videoVolume: volume,
             extra: extra,
-            isPreview: preview
+            isPreview: preview,
         });
     });
 
-    router.get('/display/:id', function (req, res, next) {
+    router.get("/display/:id", function (req, res, next) {
         let idx = parseInt(req.params.id);
-        let preview = parseInt(req.query['isPreview']) || 0;
-        let volume = parseFloat(req.query['videoVolume']) || 1.;
+        let preview = parseInt(req.query["isPreview"]) || 0;
+        let volume = parseFloat(req.query["videoVolume"]) || 1;
         let extra = pluginManager.getDisplayAdditions();
-        res.render('displayWebGl', {
+        res.render("displayWebGl", {
             config: config,
             display: availableDisplays[idx],
             displayId: idx,
             videoVolume: volume,
             extra: extra,
-            isPreview: preview
+            isPreview: preview,
         });
     });
 
-    router.get('/images/:dir/:name', function (req, res, next) {
+    router.get("/images/:dir/:name", function (req, res, next) {
         let options = {
-            root: './data/bundles/' + req.params.dir + '/images/',
-            dotfiles: 'deny',
+            root: "./data/bundles/" + req.params.dir + "/images/",
+            dotfiles: "deny",
             headers: {
-                'x-timestamp': Date.now(),
-                'x-sent': true
-            }
+                "x-timestamp": Date.now(),
+                "x-sent": true,
+            },
         };
 
         res.sendFile(req.params.name, options, function (err) {
@@ -121,14 +126,14 @@ export default function (pluginManager, websocket, dispatcher) {
         });
     });
 
-    router.get('/render/:dir/:name', function (req, res, next) {
+    router.get("/render/:dir/:name", function (req, res, next) {
         let options = {
-            root: './data/bundles/' + req.params.dir + '/render/',
-            dotfiles: 'deny',
+            root: "./data/bundles/" + req.params.dir + "/render/",
+            dotfiles: "deny",
             headers: {
-                'x-timestamp': Date.now(),
-                'x-sent': true
-            }
+                "x-timestamp": Date.now(),
+                "x-sent": true,
+            },
         };
 
         res.sendFile(req.params.name, options, function (err) {
@@ -139,14 +144,14 @@ export default function (pluginManager, websocket, dispatcher) {
         });
     });
 
-    router.get('/tmp/:displayId', function (req, res, next) {
+    router.get("/tmp/:displayId", function (req, res, next) {
         let options = {
-            root: './tmp',
-            dotfiles: 'deny',
+            root: "./tmp",
+            dotfiles: "deny",
             headers: {
-                'x-timestamp': Date.now(),
-                'x-sent': true
-            }
+                "x-timestamp": Date.now(),
+                "x-sent": true,
+            },
         };
 
         res.sendFile("display_" + req.params.displayId + ".png", options, function (err) {
@@ -157,14 +162,14 @@ export default function (pluginManager, websocket, dispatcher) {
         });
     });
 
-    router.get('/background/:name', function (req, res, next) {
+    router.get("/background/:name", function (req, res, next) {
         let options = {
-            root: './data/backgrounds/',
-            dotfiles: 'deny',
+            root: "./data/backgrounds/",
+            dotfiles: "deny",
             headers: {
-                'x-timestamp': Date.now(),
-                'x-sent': true
-            }
+                "x-timestamp": Date.now(),
+                "x-sent": true,
+            },
         };
 
         res.sendFile(req.params.name, options, function (err) {
@@ -176,4 +181,4 @@ export default function (pluginManager, websocket, dispatcher) {
     });
 
     return router;
-};
+}
