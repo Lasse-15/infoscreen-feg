@@ -3,7 +3,7 @@
   "auth": {
     "userName": "Benutzername",
     "password": "Passwort",
-    "login": "Anmeldeen",
+    "login": "Anmelden",
     "logout": "Abmelden"
   },
   "actions": {
