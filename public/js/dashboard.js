@@ -351,7 +351,7 @@ function updateSlides(slides) {
         <div class="right floated content">
         <button class="ui small basic inverted icon button" onclick="editSlide('${slide.uuid}', '${slide.type}');"><i class="edit outline icon"></i></button>
         <button class="ui small basic inverted icon button" onclick="emit('controls.skipTo', {fileName: '${slide.uuid}'} );"><i class="step forward icon"></i></button>
-        <!--   <button class="ui small basic inverted icon button" onclick="remove('${slide.uuid}');"><i class="delete icon"></i></button> -->
+        <button class="ui small basic inverted icon button" onclick="remove('${slide.uuid}');"><i class="delete icon"></i></button>
         ${toggleButton}
         </div>
         <div class="content">
