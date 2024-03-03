@@ -15,7 +15,7 @@ export default {
     "streamKey": process.env.STREAMKEY || 'INFOSCREEN3',  // stream key for rtmp end point
     "useLocalAssets": false,    // used to load javascript libraries locally from /public/assets
     "mediaServer": (process.env.MEDIASERVER == "true") ? true : false,       // local streaming server for rtmp, see docs how to use
-    "defaultLocale": process.env.LOCALE || "en",      // currently supported values are: "en","fi"
+    "defaultLocale": process.env.LOCALE || "en",      // currently supported values are: "en","fi, de"
     "accesskey": process.env.ACCESSKEY || false,
     /*
      * Plugins

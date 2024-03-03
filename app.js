@@ -118,7 +118,7 @@ i18next
             addPath: './locales/{{lng}}/{{ns}}.missing.json'
         },
         fallbackLng: config.defaultLocale,
-        preload: ['en', 'fi'],
+        preload: ['en', 'fi', 'de'],
         saveMissing: false,
         detection: {
             // order and from where user language should be detected
