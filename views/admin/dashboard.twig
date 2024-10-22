@@ -61,7 +61,7 @@
                     <h1 class="ui inverted header">
                         {{ t("admin.dashboard.allBundles") }}
                     </h1>
-                    {% if permission.dashboard.addBundle %}
+                    {% if permission.dashboard.manageBundles %}
                         <button class="ui basic inverted button"
                                 onclick="createNewBundle();">  {{ t("actions.createNew") }}</button>
                         <button class="ui basic inverted button"
@@ -79,13 +79,11 @@
                     <h1 class="ui inverted header">
                         {{ t("admin.dashboard.slidesInRotation") }}
                     </h1>
-                    {% if permission.dashboard.addSlides %}
+                    {% if permission.dashboard.addNewContent %}
                         <button class="ui basic inverted button" onclick="createNewSlide();">{{ t("actions.createNew") }}
                         </button>
                         <button class="ui basic inverted button" onclick="createNewVideo();">{{ t("actions.addVideo") }}
                         </button>
-                    {% endif %}
-                    {% if permission.dashboard.addWebPage %}
                         <button class="ui basic inverted button" onclick="addLink();">{{ t("actions.addWebPage") }}
                         </button>
                     {% endif %}
